@@ -28,6 +28,7 @@ FCM_NOTIFICATIONS_PAYLOAD_KEYS = [
 	"title", "body", "icon", "image", "sound", "badge", "color", "tag", "click_action",
 	"body_loc_key", "body_loc_args", "title_loc_key", "title_loc_args", "android_channel_id"
 ]
+FCM_ANDROID_KEYS = ["priority"]
 
 def _chunks(l, n):
 	"""
@@ -132,6 +133,12 @@ def _cm_send_request(
 				notification_payload[key] = value_from_kwargs
 		if notification_payload:
 			payload["notification"] = notification_payload
+
+		android_payload = {
+			k: v for k, v in kwargs.items() if v and (k in FCM_ANDROID_KEYS)
+		}
+		if android_payload:
+			payload["android"] = android_payload
 
 	if data:
 		payload["data"] = data
